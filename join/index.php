@@ -1,3 +1,36 @@
+<?php
+  // セッションを使うページに必ず入れる
+  session_start();
+
+  // フォームからデータが送信された場合
+  if (!empty($_POST)) {
+    // エラー項目の確認
+    // ニックネームが未入力
+    if ($_POST['nick_name'] == '') {
+      $error['nick_name'] = 'blank';
+    }
+    // メールアドレスが未入力
+    if ($_POST['email'] == '') {
+      $error['email'] = 'blank';
+    }
+    // パスワードが未入力
+    if ($_POST['password'] == '') {
+      $error['password'] = 'blank';
+    } elseif (strlen($_POST['password']) < 4) {
+      // パスワードが４文字より少ない
+      $error['password'] = 'length';
+    }
+
+    // エラーがない場合
+    if (empty($error)) {
+      // セッションに値を保存
+      $_SESSION['join'] = $_POST;
+      // check.phpへ移動
+      header('Location: check.php');
+      exit();
+    }
+  }
+?>
 <!DOCTYPE html>
 <html lang="ja">
   <head>
@@ -52,7 +85,7 @@
     <div class="row">
       <div class="col-md-6 col-md-offset-3 content-margin-top">
         <legend>会員登録</legend>
-        <form method="post" action="check.html" class="form-horizontal" role="form" enctype="multipart/form-data">
+        <form method="post" action="" class="form-horizontal" role="form" enctype="multipart/form-data">
           <!-- ニックネーム -->
           <div class="form-group">
             <label class="col-sm-4 control-label">ニックネーム</label>
