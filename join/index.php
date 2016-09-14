@@ -4,9 +4,12 @@
 
   // フォームからデータが送信された場合
   if (!empty($_POST)) {
+    // 半角スペース・全角スペースを除去
+    $nick_name = trim(mb_convert_kana($_POST['nick_name'], "s", 'UTF-8'));
+
     // エラー項目の確認
     // ニックネームが未入力
-    if ($_POST['nick_name'] == '') {
+    if ($nick_name == '') {
       $error['nick_name'] = 'blank';
     }
     // メールアドレスが未入力
