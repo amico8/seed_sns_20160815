@@ -157,6 +157,9 @@
               <?php if (isset($error['picture_path']) && $error['picture_path'] == 'type'): ?>
                 <p class="error">* 写真などは「.gif」「.jpg」「.png」の画像を指定してください。</p>
               <?php endif; ?>
+              <?php if (!empty($error)): ?>
+                <p class="error">* 恐れ入りますが、画像を改めて指定してください。</p>
+              <?php endif; ?>
             </div>
           </div>
 
