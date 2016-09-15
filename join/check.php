@@ -2,11 +2,28 @@
   // セッションを使うページではこの記述を入れる
   session_start();
 
+  // dbconnect.phpを読み込む
+  require('../dbconnect.php');
+
   // セッションにデータがなかったらindex.phpへ遷移する
   if (!isset($_SESSION['join'])) {
     header('Location: index.php');
     exit();
   }
+
+  // DB登録処理
+  if (!empty($_POST)) {
+    $sql = sprintf('INSERT INTO `members` SET `nick_name`="%s", `email`="%s", password="%s", `picture_path`="%s", `created`=now()',
+      mysqli_real_escape_string($db, $_SESSION['join']['nick_name']),
+      mysqli_real_escape_string($db, $_SESSION['join']['email']),
+      mysqli_real_escape_string($db, sha1($_SESSION['join']['password'])),
+      mysqli_real_escape_string($db, $_SESSION['join']['picture_path'])
+      );
+
+    mysqli_query($db, $sql) or die(mysqli_error($db));
+    unset($_SESSION['join']);
+  }
+
 ?>
 <!DOCTYPE html>
 <html lang="ja">
@@ -61,7 +78,7 @@
   <div class="container">
     <div class="row">
       <div class="col-md-4 col-md-offset-4 content-margin-top">
-        <form method="post" action="thanks.html" class="form-horizontal" role="form">
+        <form method="post" action="" class="form-horizontal" role="form">
           <input type="hidden" name="action" value="submit">
           <div class="well">ご登録内容をご確認ください。</div>
             <table class="table table-striped table-condensed">
