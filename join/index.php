@@ -29,6 +29,7 @@
     $fileName = $_FILES['picture_path']['name'];
     if (!empty($fileName)) {
       $ext = substr($fileName, -3);
+      $ext = strtolower($ext);
       if ($ext != 'jpg' && $ext != 'gif' && $ext != 'png') {
         $error['picture_path'] = 'type';
       }
