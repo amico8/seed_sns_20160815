@@ -22,6 +22,10 @@
 
     mysqli_query($db, $sql) or die(mysqli_error($db));
     unset($_SESSION['join']);
+
+    // thanks.phpへリダイレクト
+    header('Location: thanks.php');
+    exit();
   }
 
 ?>
