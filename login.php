@@ -7,7 +7,23 @@
   if (!empty($_POST)) {
     if ($_POST['email'] != '' && $_POST['password'] != '') {
       // ログイン処理
-      $sql = '';
+      $sql = sprintf('SELECT * FROM `members` WHERE `email` = "%s" AND `password` = "%s"',
+        mysqli_real_escape_string($db, $_POST['email']),
+        mysqli_real_escape_string($db, sha1($_POST['password']))
+      );
+      // SQL実行
+      $record = mysqli_query($db, $sql) or die(mysqli_error($db));
+
+      if ($table = mysqli_fetch_assoc($record)) {
+        // ログイン成功
+        $_SESSION['id'] = $table['member_id'];
+        $_SESSION['time'] = time();
+        header('Location: index.php');
+        exit();
+      } else {
+        // ログイン失敗
+        $error['login'] = 'failed';
+      }
 
     } else {
       // 必須エラー
@@ -50,7 +66,7 @@
                   <span class="icon-bar"></span>
                   <span class="icon-bar"></span>
               </button>
-              <a class="navbar-brand" href="index.html"><span class="strong-title"><i class="fa fa-twitter-square"></i> Seed SNS</span></a>
+              <a class="navbar-brand" href="index.php"><span class="strong-title"><i class="fa fa-twitter-square"></i> Seed SNS</span></a>
           </div>
           <!-- Collect the nav links, forms, and other content for toggling -->
           <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
@@ -76,9 +92,13 @@
               <?php else: ?>
                 <input type="email" name="email" class="form-control" placeholder="例： seed@nex.com">
               <?php endif; ?>
-              <!-- 必須エラー文 -->
+              <!-- 必須エラー -->
               <?php if(isset($error['login']) && $error['login'] == 'blank'): ?>
                 <p class="error">* メールアドレスとパスワードをご記入ください。</p>
+              <?php endif; ?>
+              <!-- ログインエラー -->
+              <?php if (isset($error['login']) && $error['login'] == 'failed'): ?>
+                <p class="error">* ログインに失敗しました。正しくご記入ください。</p>
               <?php endif; ?>
             </div>
           </div>
