@@ -3,6 +3,13 @@
 
   session_start();
 
+  // 自動ログイン処理
+  if (isset($_COOKIE['email']) && $_COOKIE['email'] != '') {
+    $_POST['email'] = $_COOKIE['email'];
+    $_POST['password'] = $_COOKIE['password'];
+    $_POST['save'] = 'on';
+  }
+
   // ログインボタンクリック時
   if (!empty($_POST)) {
     if ($_POST['email'] != '' && $_POST['password'] != '') {
@@ -18,6 +25,14 @@
         // ログイン成功
         $_SESSION['id'] = $table['member_id'];
         $_SESSION['time'] = time();
+
+        // cookieにログイン情報を保存する
+        if ($_POST['save'] == 'on') {
+          setcookie('email', $_POST['email'], time() + 60*60*24*14);
+          setcookie('password', $_POST['password'], time() + 60*60*24*14);
+        }
+
+        // リダイレクト
         header('Location: index.php');
         exit();
       } else {
