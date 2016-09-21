@@ -40,8 +40,18 @@
   }
 
   // 投稿を取得する
-  $sql = 'SELECT m.`nick_name`, m.`picture_path`, t.* FROM `tweets` t, `members` m WHERE m.member_id = t.member_id ORDER BY t.`created` DESC';
+  $sql = 'SELECT m.`nick_name`, m.`picture_path`, t.* FROM `tweets` t, `members` m WHERE m.`member_id` = t.`member_id` ORDER BY t.`created` DESC';
   $tweets = mysqli_query($db, $sql) or die(mysqli_error($db));
+
+  // 返信の場合
+  if (isset($_REQUEST['res'])) {
+    $sql = sprintf('SELECT m.`nick_name`, m.`picture_path`, t.* FROM `tweets` t, `members` m WHERE m.`member_id` = t.`member_id` AND t.`tweet_id` = %d ORDER BY t.`created` DESC',
+      mysqli_real_escape_string($db, $_REQUEST['res'])
+    );
+    $record = mysqli_query($db, $sql) or die(mysqli_error($db));
+    $table = mysqli_fetch_assoc($record);
+    $tweet = '@'. $table['nick_name'] . ' ' . $table['tweet'];
+  }
 
 ?>
 <!DOCTYPE html>
@@ -101,7 +111,12 @@
             <div class="form-group">
               <label class="col-sm-4 control-label">つぶやき</label>
               <div class="col-sm-8">
-                <textarea name="tweet" cols="50" rows="5" class="form-control" placeholder="例：Hello World!"></textarea>
+                  <?php if (isset($tweet)): ?>
+                    <textarea name="tweet" cols="50" rows="5" class="form-control" placeholder="例：Hello World!"><?php echo htmlspecialchars($tweet, ENT_QUOTES, 'UTF-8'); ?></textarea>
+                    <input type="hidden" name="reply_tweet_id" value="<?php echo htmlspecialchars($_REQUEST['res'], ENT_QUOTES, 'UTF-8'); ?>">
+                  <?php else: ?>
+                    <textarea name="tweet" cols="50" rows="5" class="form-control" placeholder="例：Hello World!"></textarea>
+                  <?php endif; ?>
               </div>
             </div>
           <ul class="paging">
@@ -121,7 +136,7 @@
           <img src="member_picture/<?php echo htmlspecialchars($tweet['picture_path'], ENT_QUOTES, 'UTF-8'); ?>" width="48" height="48">
           <p>
             <?php echo htmlspecialchars($tweet['tweet'], ENT_QUOTES, 'UTF-8'); ?><span class="name"> (<?php echo htmlspecialchars($tweet['nick_name'], ENT_QUOTES, 'UTF-8'); ?>) </span>
-            [<a href="#">Re</a>]
+            [<a href="index.php?res=<?php echo htmlspecialchars($tweet['tweet_id'], ENT_QUOTES, 'UTF-8'); ?>">Re</a>]
           </p>
           <p class="day">
             <a href="view.html">
