@@ -54,6 +54,11 @@
     $tweet = '@'. $table['nick_name'] . ' ' . $table['tweet'];
   }
 
+  // htmlspecialcharsのショートカット
+  function h($value) {
+    return htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
+  }
+
 ?>
 <!DOCTYPE html>
 <html lang="ja">
