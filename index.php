@@ -27,9 +27,10 @@
   // 投稿を記録する（「つぶやく」ボタンをクリックした時）
   if (!empty($_POST)) {
     if ($_POST['tweet'] != '') {
-      $sql = sprintf('INSERT INTO `tweets` SET `tweet` = "%s", `member_id` = %d, `reply_tweet_id` = 0, `created` = now()',
+      $sql = sprintf('INSERT INTO `tweets` SET `tweet` = "%s", `member_id` = %d, `reply_tweet_id` = %d, `created` = now()',
         mysqli_real_escape_string($db, $_POST['tweet']),
-        mysqli_real_escape_string($db, $member['member_id'])
+        mysqli_real_escape_string($db, $member['member_id']),
+        mysqli_real_escape_string($db, $_POST['reply_tweet_id'])
       );
 
       mysqli_query($db, $sql) or die(mysqli_error($db));
