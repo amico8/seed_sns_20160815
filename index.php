@@ -54,6 +54,36 @@
     $tweet = '@'. $table['nick_name'] . ' ' . $table['tweet'];
   }
 
+  // ページング処理
+  $page = '';
+  // GETパラメータで渡されるページ番号を取得
+  if (isset($_REQUEST['page'])) {
+    $page = $_REQUEST['page'];
+  }
+  // pageパラメータがない場合は、ページ番号を1にする
+  if ($page == '') {
+    $page = 1;
+  }
+
+  // max関数：()内に指定した複数のデータから、一番大きい値を返す
+  // ①表示する正しいページの数値（Min）を設定
+  $page = max($page, 1);
+
+  // ②必要なページ数を計算する
+  $sql = 'SELECT COUNT(*) AS cnt FROM `tweets`';
+  $recordSet = mysqli_query($db, $sql) or die(mysqli_error($db));
+  $table = mysqli_fetch_assoc($recordSet);
+  // ceil()関数：切り上げする関数
+  $maxPage = ceil($table['cnt'] / 5);
+
+  // ③表示する正しいページ数の数値（Max）を設定
+  $page = min($page, $maxPage);
+
+  // ④ページに表示する件数だけ取得
+
+
+
+
   // htmlspecialcharsのショートカット
   function h($value) {
     return htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
@@ -133,9 +163,9 @@
           <ul class="paging">
             <input type="submit" class="btn btn-info" value="つぶやく">
                 &nbsp;&nbsp;&nbsp;&nbsp;
-                <li><a href="index.html" class="btn btn-default">前</a></li>
+                <li><a href="index.php?page=<?php echo $page -1; ?>" class="btn btn-default">前</a></li>
                 &nbsp;&nbsp;|&nbsp;&nbsp;
-                <li><a href="index.html" class="btn btn-default">次</a></li>
+                <li><a href="index.php?page=<?php echo $page +1; ?>" class="btn btn-default">次</a></li>
           </ul>
         </form>
       </div>
