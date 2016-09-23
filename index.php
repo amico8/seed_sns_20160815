@@ -165,9 +165,17 @@
           <ul class="paging">
             <input type="submit" class="btn btn-info" value="つぶやく">
                 &nbsp;&nbsp;&nbsp;&nbsp;
-                <li><a href="index.php?page=<?php echo $page -1; ?>" class="btn btn-default">前</a></li>
+                <?php if ($page > 1): ?>
+                  <li><a href="index.php?page=<?php echo $page -1; ?>" class="btn btn-default">前</a></li>
+                <?php else: ?>
+                  <li>前</li>
+                <?php endif; ?>
                 &nbsp;&nbsp;|&nbsp;&nbsp;
-                <li><a href="index.php?page=<?php echo $page +1; ?>" class="btn btn-default">次</a></li>
+                <?php if ($page < $maxPage): ?>
+                  <li><a href="index.php?page=<?php echo $page +1; ?>" class="btn btn-default">次</a></li>
+                <?php else: ?>
+                  <li>次</li>
+                <?php endif; ?>
           </ul>
         </form>
       </div>
