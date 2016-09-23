@@ -40,10 +40,6 @@
     }
   }
 
-  // 投稿を取得する
-  $sql = 'SELECT m.`nick_name`, m.`picture_path`, t.* FROM `tweets` t, `members` m WHERE m.`member_id` = t.`member_id` ORDER BY t.`created` DESC';
-  $tweets = mysqli_query($db, $sql) or die(mysqli_error($db));
-
   // 返信の場合
   if (isset($_REQUEST['res'])) {
     $sql = sprintf('SELECT m.`nick_name`, m.`picture_path`, t.* FROM `tweets` t, `members` m WHERE m.`member_id` = t.`member_id` AND t.`tweet_id` = %d ORDER BY t.`created` DESC',
@@ -80,8 +76,14 @@
   $page = min($page, $maxPage);
 
   // ④ページに表示する件数だけ取得
+  $start = ($page - 1) * 5;
+  $start = max(0, $start);
 
-
+  // 投稿内容（表示するページ分）を取得する
+  $sql = sprintf('SELECT m.`nick_name`, m.`picture_path`, t.* FROM `tweets` t, `members` m WHERE t.`member_id` = m.`member_id` ORDER BY t.`created` DESC LIMIT %d, 5',
+      $start
+    );
+  $tweets = mysqli_query($db, $sql) or die(mysqli_error($db));
 
 
   // htmlspecialcharsのショートカット
