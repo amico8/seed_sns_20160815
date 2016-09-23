@@ -78,7 +78,9 @@
           </p>
           <p class="day">
             <?php echo htmlspecialchars($tweet['created'], ENT_QUOTES, 'UTF-8'); ?>
-            [<a href="#" style="color: #F33;">削除</a>]
+            <?php if ($_SESSION['id'] == $tweet['member_id']): ?>
+            [<a href="delete.php?tweet_id=<?php echo htmlspecialchars($tweet['tweet_id'], ENT_QUOTES, 'UTF-8'); ?>" style="color: #F33;">削除</a>]
+            <?php endif; ?>
           </p>
         </div>
       <?php else: ?>
