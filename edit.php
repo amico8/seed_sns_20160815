@@ -16,6 +16,19 @@
 
   $tweets = mysqli_query($db, $sql) or die(mysqli_error($db));
 
+  // POSTでデータが送信された時
+  if (!empty($_POST)) {
+    if ($_POST['tweet'] != '') {
+      $sql = sprintf('UPDATE `tweets` SET `tweet` = "%s" WHERE `tweet_id` = %d',
+        mysqli_real_escape_string($db, $_POST['tweet']),
+        mysqli_real_escape_string($db, $_REQUEST['tweet_id'])
+      );
+      mysqli_query($db, $sql) or die(mysqli_error($db));
+
+      header('Location: index.php');
+      exit();
+    }
+  }
 
   // htmlspecialcharsのショートカット
   function h($value) {
