@@ -180,16 +180,22 @@
               </div>
             </div>
           <ul class="paging">
+            <?php
+              $word = '';
+              if (isset($_GET['search_word'])) {
+                $word = '&search_word=' . $_GET['search_word'];
+              }
+            ?>
             <input type="submit" class="btn btn-info" value="つぶやく">
                 &nbsp;&nbsp;&nbsp;&nbsp;
                 <?php if ($page > 1): ?>
-                  <li><a href="index.php?page=<?php echo $page -1; ?>" class="btn btn-default">前</a></li>
+                  <li><a href="index.php?page=<?php echo $page -1; ?><?php echo $word; ?>" class="btn btn-default">前</a></li>
                 <?php else: ?>
                   <li>前</li>
                 <?php endif; ?>
                 &nbsp;&nbsp;|&nbsp;&nbsp;
                 <?php if ($page < $maxPage): ?>
-                  <li><a href="index.php?page=<?php echo $page +1; ?>" class="btn btn-default">次</a></li>
+                  <li><a href="index.php?page=<?php echo $page +1; ?><?php echo $word; ?>" class="btn btn-default">次</a></li>
                 <?php else: ?>
                   <li>次</li>
                 <?php endif; ?>
